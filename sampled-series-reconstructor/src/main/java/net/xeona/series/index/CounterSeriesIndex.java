@@ -14,6 +14,10 @@ public class CounterSeriesIndex implements SeriesIndex<CounterSeriesIndex> {
 	}
 
 	public static class Operations implements SeriesIndex.Operations<CounterSeriesIndex> {
+		
+		private static final Operations INSTANCE = new Operations();
+		
+		Operations() {}
 
 		@Override
 		public CounterSeriesIndex init() {
@@ -23,6 +27,10 @@ public class CounterSeriesIndex implements SeriesIndex<CounterSeriesIndex> {
 		@Override
 		public CounterSeriesIndex increment(CounterSeriesIndex index) {
 			return new CounterSeriesIndex(index.count + 1);
+		}
+		
+		public static Operations instance() {
+			return INSTANCE;
 		}
 
 	}
