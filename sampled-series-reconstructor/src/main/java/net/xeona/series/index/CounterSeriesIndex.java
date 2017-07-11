@@ -20,7 +20,7 @@ public class CounterSeriesIndex implements SeriesIndex<CounterSeriesIndex> {
 		Operations() {}
 
 		@Override
-		public CounterSeriesIndex init() {
+		public CounterSeriesIndex initialValue() {
 			return new CounterSeriesIndex(0);
 		}
 
