@@ -13,6 +13,28 @@ public class CounterSeriesIndex implements SeriesIndex<CounterSeriesIndex> {
 		return Long.compare(count, other.count);
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (count ^ (count >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CounterSeriesIndex other = (CounterSeriesIndex) obj;
+		if (count != other.count)
+			return false;
+		return true;
+	}
+
 	public static class Operations implements SeriesIndex.Operations<CounterSeriesIndex> {
 		
 		private static final Operations INSTANCE = new Operations();
@@ -21,7 +43,7 @@ public class CounterSeriesIndex implements SeriesIndex<CounterSeriesIndex> {
 
 		@Override
 		public CounterSeriesIndex initialValue() {
-			return new CounterSeriesIndex(0);
+			return new CounterSeriesIndex(Long.MIN_VALUE);
 		}
 
 		@Override

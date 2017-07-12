@@ -1,15 +1,22 @@
 package net.xeona.series.index;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class SourceIndexRegistry<S, I extends SeriesIndex<? super I>> {
 
+	private final SeriesIndex.Operations<I> seriesIndexOperations;
+
 	private final Map<S, I> seriesIndexBySource = new HashMap<>();
 
-	public Optional<I> getIndex(S source) {
-		return Optional.ofNullable(seriesIndexBySource.get(source));
+	public SourceIndexRegistry(SeriesIndex.Operations<I> seriesIndexOperations) {
+		this.seriesIndexOperations = requireNonNull(seriesIndexOperations);
+	}
+
+	public I getIndex(S source) {
+		return seriesIndexBySource.computeIfAbsent(source, absentSource -> seriesIndexOperations.initialValue());
 	}
 
 	public void setIndex(S source, I index) {
