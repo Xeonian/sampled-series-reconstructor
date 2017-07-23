@@ -16,7 +16,7 @@ public class MultiSampledSeriesReconstructor<K, V, S, I extends SeriesIndex<? su
 	private final SourceIndexRegistry<S, I> sourceIndexRegistry;
 	private final SampledSeriesReconstructorFactory<V, S, I> seriesReconstructorFactory;
 
-	private final Map<K, SampledSeriesReconstructor<V, S, I>> seriesReconstructorsByKey = new HashMap<>();
+	private final Map<K, SampledStepSeriesReconstructor<V, S, I>> seriesReconstructorsByKey = new HashMap<>();
 
 	public MultiSampledSeriesReconstructor(SourceIndexRegistry<S, I> sourceIndexRegistry,
 			SampledSeriesReconstructorFactory<V, S, I> seriesReconstructorFactory) {
@@ -33,21 +33,21 @@ public class MultiSampledSeriesReconstructor<K, V, S, I extends SeriesIndex<? su
 			I initialSourceIndex;
 			I subsequentSourceIndex;
 			do {
-				initialSourceIndex = sourceIndexRegistry.getIndex(source);
+				initialSourceIndex = sourceIndexRegistry.getCurrentIndexForSource(source);
 				for (KeyedSeriesSample<K, V, S> sample : entry.getValue()) {
 					K sampleSeriesKey = sample.getKey();
-					SampledSeriesReconstructor<V, S, I> seriesReconstructor = seriesReconstructorsByKey.computeIfAbsent(
+					SampledStepSeriesReconstructor<V, S, I> seriesReconstructor = seriesReconstructorsByKey.computeIfAbsent(
 							sampleSeriesKey, absentSeriesKey -> seriesReconstructorFactory.build(sourceIndexRegistry));
 					seriesReconstructor.notifySample(sample);
 				}
-				subsequentSourceIndex = sourceIndexRegistry.getIndex(source);
+				subsequentSourceIndex = sourceIndexRegistry.getCurrentIndexForSource(source);
 			} while (subsequentSourceIndex.compareTo(initialSourceIndex) > 0);
 		}
 	}
 
 	public interface SampledSeriesReconstructorFactory<V, S, I extends SeriesIndex<? super I>> {
 
-		SampledSeriesReconstructor<V, S, I> build(SourceIndexRegistry<S, I> sourceIndexRegistry);
+		SampledStepSeriesReconstructor<V, S, I> build(SourceIndexRegistry<S, I> sourceIndexRegistry);
 
 	}
 

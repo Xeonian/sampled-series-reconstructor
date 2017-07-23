@@ -1,5 +1,7 @@
 package net.xeona.series.index;
 
+import com.google.common.base.MoreObjects;
+
 public class CounterSeriesIndex implements SeriesIndex<CounterSeriesIndex> {
 
 	private final long count;
@@ -15,30 +17,23 @@ public class CounterSeriesIndex implements SeriesIndex<CounterSeriesIndex> {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (count ^ (count >>> 32));
-		return result;
+		return Long.hashCode(count);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CounterSeriesIndex other = (CounterSeriesIndex) obj;
-		if (count != other.count)
-			return false;
-		return true;
+	public boolean equals(Object other) {
+		return other instanceof CounterSeriesIndex && ((CounterSeriesIndex) other).count == count;
+	}
+
+	@Override
+	public String toString() {
+		return MoreObjects.toStringHelper(this).add("count", count).toString();
 	}
 
 	public static class Operations implements SeriesIndex.Operations<CounterSeriesIndex> {
-		
+
 		private static final Operations INSTANCE = new Operations();
-		
+
 		Operations() {}
 
 		@Override
@@ -50,7 +45,7 @@ public class CounterSeriesIndex implements SeriesIndex<CounterSeriesIndex> {
 		public CounterSeriesIndex increment(CounterSeriesIndex index) {
 			return new CounterSeriesIndex(index.count + 1);
 		}
-		
+
 		public static Operations instance() {
 			return INSTANCE;
 		}

@@ -7,8 +7,8 @@ public class EqualityValueUpdatePredicate implements ValueUpdatePredicate<Object
 	EqualityValueUpdatePredicate() {}
 
 	@Override
-	public boolean isValueUpdated(Object previousValue, Object newValue) {
-		return !newValue.equals(previousValue);
+	public boolean isValueEquivalent(Object previousValue, Object newValue) {
+		return newValue.equals(previousValue);
 	}
 
 	public static EqualityValueUpdatePredicate instance() {
